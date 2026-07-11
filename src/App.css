@@ -1,0 +1,131 @@
+.app-container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.todo-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.todo-form input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.todo-form button {
+  padding: 0.75rem 1rem;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.todo-form button:hover {
+  background: #1d4ed8;
+}
+
+.empty-state {
+  text-align: center;
+  color: #6b7280;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.todo-item.completed span {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+
+.checkbox {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.delete-button {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #b91c1c;
+}
+
+.upload-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.upload-section h2 {
+  margin-bottom: 0.75rem;
+}
+
+.upload-section input[type='file'] {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.preview-box {
+  margin-bottom: 1rem;
+}
+
+.preview-box img,
+.preview-box video {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.upload-section button {
+  padding: 0.75rem 1rem;
+  border: none;
+  background: #10b981;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.upload-section button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.upload-status {
+  margin-top: 0.75rem;
+  color: #374151;
+}
