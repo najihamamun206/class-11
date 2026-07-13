@@ -1,7 +1,9 @@
 
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 function App() {
   const [task, setTask] = useState('')
@@ -10,32 +12,90 @@ function App() {
   const [previewUrl, setPreviewUrl] = useState('')
   const [uploadStatus, setUploadStatus] = useState('')
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/todos`)
+        if (!response.ok) {
+          throw new Error('Failed to load todos')
+        }
+
+        const data = await response.json()
+        setTodos(data)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchTodos()
+  }, [])
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const trimmedTask = task.trim()
     if (!trimmedTask) return
 
-    setTodos((currentTodos) => [
-      ...currentTodos,
-      {
-        id: Date.now(),
-        text: trimmedTask,
-        completed: false,
-      },
-    ])
-    setTask('')
+    try {
+      const response = await fetch(`${API_BASE_URL}/todos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: trimmedTask }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create todo')
+      }
+
+      const newTodo = await response.json()
+      setTodos((currentTodos) => [...currentTodos, newTodo])
+      setTask('')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const toggleTodo = (id) => {
-    setTodos((currentTodos) =>
-      currentTodos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
-    )
+  const toggleTodo = async (id) => {
+    const todo = todos.find((item) => item.id === id)
+    if (!todo) return
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ completed: !todo.completed }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update todo')
+      }
+
+      const updatedTodo = await response.json()
+      setTodos((currentTodos) =>
+        currentTodos.map((item) => (item.id === id ? updatedTodo : item)),
+      )
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const deleteTodo = (id) => {
-    setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id))
+  const deleteTodo = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete todo')
+      }
+
+      setTodos((currentTodos) => currentTodos.filter((todo) => todo.id !== id))
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleFileChange = (event) => {
@@ -58,7 +118,7 @@ function App() {
 
     try {
       setUploadStatus('Uploading...')
-      const response = await fetch('/upload', {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
       })
